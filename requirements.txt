@@ -1,0 +1,12 @@
+fastapi
+pydantic
+dotenv
+openai
+python-docx
+scikit-learn
+uvicorn
+numpy
+scipy
+lxml
+jinja2
+pinecone-client
