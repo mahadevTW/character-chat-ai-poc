@@ -87,7 +87,7 @@ Send a message to a movie character and receive a response in character.
 #### Request Body
 ```json
 {
-  "movie": "schindlers",
+  "movie": "The-Godfather",
   "character": "Oskar Schindler",
   "message": "What motivates you to help the Jews?",
   "session_id": "optional-session-id"
@@ -191,7 +191,7 @@ Test the API using curl:
 curl -X POST "http://localhost:8000/chat" \
      -H "Content-Type: application/json" \
      -d '{
-       "movie": "schindlers",
+       "movie": "The-Godfather",
        "character": "Oskar Schindler",
        "message": "Hello, how are you?"
      }'

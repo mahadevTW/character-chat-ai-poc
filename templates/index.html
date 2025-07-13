@@ -224,15 +224,15 @@
             <!-- Chat Interface -->
             <div class="chat-container">
                 <div class="chat-header">
-                    <h3>💬 Chat with Oskar Schindler</h3>
+                    <h3>💬 Chat with Michael Corleone</h3>
                     <p>Ask me anything about the movie or my experiences</p>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
                     <div class="message character">
-                        <div class="message-avatar">OS</div>
+                        <div class="message-avatar">MC</div>
                         <div class="message-content">
-                            Hello! I'm Oskar Schindler. I'm here to share my story and experiences. What would you like to know about me or the events that took place during the war?
+                            Hello! I'm Michael Corleone. I'm here to share my story and experiences. What would you like to know about me or the events that took place during the war?
                         </div>
                     </div>
                 </div>
@@ -254,7 +254,7 @@
                     </form>
                     <div class="typing-indicator" id="typingIndicator">
                         <div class="loading"></div>
-                        <span>Oskar is typing...</span>
+                        <span>Michael is typing...</span>
                     </div>
                 </div>
             </div>
@@ -302,8 +302,8 @@
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                movie: 'schindlers',
-                                character: 'Oskar Schindler',
+                                movie: 'The-Godfather',
+                                character: 'Michael Corleone',
                                 message: message,
                                 session_id: sessionId
                             })
@@ -332,7 +332,7 @@
                     
                     const avatar = document.createElement('div');
                     avatar.className = 'message-avatar';
-                    avatar.textContent = sender === 'user' ? 'U' : 'OS';
+                    avatar.textContent = sender === 'user' ? 'U' : 'MC';
                     
                     const messageContent = document.createElement('div');
                     messageContent.className = 'message-content';

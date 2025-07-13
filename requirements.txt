@@ -9,4 +9,8 @@ numpy
 scipy
 lxml
 jinja2
-pinecone-client
+selenium~=4.33.0
+webdriver-manager~=4.0.2
+boto3~=1.38.30
+requests~=2.32.3
+pinecone
