@@ -1,247 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineJoy Character Chat POC</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      background: white;
-      padding: 3rem;
-      border-radius: 15px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 1200px; /* 🔥 widened */
-      margin: 20px;
-      display: flex; /* 🔥 split layout */
-      gap: 2rem;
-    }
-    .chat-container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-    }
-    .chat-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 15px 15px 0 0;
-      text-align: center;
-    }
-    .chat-messages {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      background: #f8f9fa;
-    }
-    .message { margin-bottom: 1rem; display: flex; align-items: flex-start; }
-    .message.user { justify-content: flex-end; }
-    .message.character { justify-content: flex-start; }
-    .message-content {
-      max-width: 70%;
-      padding: 0.75rem 1rem;
-      border-radius: 15px;
-      word-wrap: break-word;
-    }
-    .message.user .message-content {
-      background: #667eea; color: white; border-bottom-right-radius: 5px;
-    }
-    .message.character .message-content {
-      background: white; color: #333; border: 1px solid #e0e0e0; border-bottom-left-radius: 5px;
-    }
-    .message-avatar {
-      width: 35px; height: 35px; border-radius: 50%; margin: 0 0.5rem;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 14px;
-    }
-    .message.user .message-avatar { background: #764ba2; color: white; }
-    .message.character .message-avatar { background: #ff6b6b; color: white; }
-    .chat-input-container {
-      padding: 1rem; background: white;
-      border-radius: 0 0 15px 15px; border-top: 1px solid #e0e0e0;
-    }
-    .chat-input-form { display: flex; gap: 0.5rem; }
-    .chat-input {
-      flex: 1; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 25px;
-      font-size: 1rem; outline: none; transition: border-color 0.3s;
-    }
-    .chat-input:focus { border-color: #667eea; }
-    .send-button {
-      padding: 0.75rem 1.5rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white; border: none; border-radius: 25px;
-      cursor: pointer; font-size: 1rem; transition: transform 0.2s;
-    }
-    .send-button:hover { transform: translateY(-2px); }
-    .send-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .loading {
-      display: inline-block; width: 20px; height: 20px;
-      border: 3px solid #f3f3f3; border-top: 3px solid #667eea;
-      border-radius: 50%; animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .typing-indicator {
-      display: none; align-items: center; gap: 0.5rem;
-      color: #666; font-style: italic;
-    }
-    /* 🔥 Video Player */
-    .video-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-video {
-  width: 100%;
-  max-width: 500px;   /* ⬅️ wider than before */
-  height: 600px;      /* ⬅️ fixed taller height */
-  object-fit: cover;  /* ensures video fills the box */
-  border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineJoy Character Chat POC</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .api-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        .api-info h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        .api-info p {
+            color: #555;
+            margin: 0.5rem 0;
+        }
+        .highlight {
+            background: #e3f2fd;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #1976d2;
+        }
+        
+        /* Chat Box Styles */
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.character {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.character .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .message.user .message-avatar {
+            background: #764ba2;
+            color: white;
+        }
+        
+        .message.character .message-avatar {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-radius: 0 0 15px 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .chat-input-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+        
+        .send-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Chat Interface -->
-    <div class="chat-container">
-      <div class="chat-header">
-        <h3>💬 Chat with Michael Corleone</h3>
-        <p>Ask me anything about the movie or my experiences</p>
-      </div>
-      <div class="chat-messages" id="chatMessages">
-        <div class="message character">
-          <div class="message-avatar">MC</div>
-          <div class="message-content">
-            Hello! I'm Michael Corleone. I'm here to share my story and experiences. What would you like to know about me or the events that took place during the war?
-          </div>
-        </div>
-      </div>
-      <div class="chat-input-container">
-        <form class="chat-input-form" id="chatForm">
-          <input type="text" class="chat-input" id="messageInput" placeholder="Type your message here..." autocomplete="off" required>
-          <button type="submit" class="send-button" id="sendButton">
-            <span id="buttonText">Send</span>
-            <span id="loadingSpinner" class="loading" style="display: none;"></span>
-          </button>
-        </form>
-        <div class="typing-indicator" id="typingIndicator">
-          <div class="loading"></div>
-          <span>Michael is typing...</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 🔥 Video Section -->
-    <div class="video-container">
-      <video id="characterVideo" controls autoplay muted loop>
-        <source src="" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const chatForm = document.getElementById('chatForm');
-      const messageInput = document.getElementById('messageInput');
-      const chatMessages = document.getElementById('chatMessages');
-      const sendButton = document.getElementById('sendButton');
-      const buttonText = document.getElementById('buttonText');
-      const loadingSpinner = document.getElementById('loadingSpinner');
-      const typingIndicator = document.getElementById('typingIndicator');
-      const characterVideo = document.getElementById('characterVideo'); // 🔥
-
-      const sessionId = 'test';
-
-      chatForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const message = messageInput.value.trim();
-        if (!message) return;
-
-        addMessage(message, 'user');
-        messageInput.value = '';
-        setLoadingState(true);
-
-        try {
-          const response = await fetch('/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              movie: 'The-Godfather',
-              character: 'Michael Corleone',
-              message: message,
-              session_id: sessionId
-            })
-          });
-
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          const data = await response.json();
-
-          addMessage(data.reply, 'character');
-
-          // 🔥 Update video player
-          if (data.video_url) {
-            characterVideo.src = data.video_url;
-            characterVideo.load();
-            characterVideo.play();
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          addMessage('Sorry, I encountered an error. Please try again.', 'character');
-        } finally {
-          setLoadingState(false);
-        }
-      });
-
-      function addMessage(content, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = sender === 'user' ? 'U' : 'MC';
-        const messageContent = document.createElement('div');
-        messageContent.className = 'message-content';
-        messageContent.textContent = content;
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(messageContent);
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      function setLoadingState(isLoading) {
-        if (isLoading) {
-          sendButton.disabled = true;
-          buttonText.style.display = 'none';
-          loadingSpinner.style.display = 'inline-block';
-          typingIndicator.style.display = 'flex';
-        } else {
-          sendButton.disabled = false;
-          buttonText.style.display = 'inline';
-          loadingSpinner.style.display = 'none';
-          typingIndicator.style.display = 'none';
-        }
-      }
-
-      messageInput.focus();
-    });
-  </script>
-</body>
-</html>
+            <div class="container">
+            <h1>🎬 CineJoy</h1>
+            <div class="subtitle">
+                <strong>Character Chat POC</strong><br>
+                Experience interactive conversations with your favorite movie characters using AI-powered RAG technology.
+            </div>
+            
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>💬 Chat with Michael Corleone</h3>
+                    <p>Ask me anything about the movie or my experiences</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message character">
+                        <div class="message-avatar">MC</div>
+                        <div class="message-content">
+                            Hello! I'm Michael Corleone. I'm here to share my story and experiences. What would you like to know about me or the events that took place during the war?
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <form class="chat-input-form" id="chatForm">
+                        <input 
+                            type="text" 
+                            class="chat-input" 
+                            id="messageInput" 
+                            placeholder="Type your message here..." 
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="send-button" id="sendButton">
+                            <span id="buttonText">Send</span>
+                            <span id="loadingSpinner" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="loading"></div>
+                        <span>Michael is typing...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="api-info">
+                <h3>🚀 API Endpoints</h3>
+                <p><strong>GET</strong> <span class="highlight">/</span> - This welcome page</p>
+                <p><strong>POST</strong> <span class="highlight">/chat</span> - Chat with movie characters</p>
+                <p><strong>GET</strong> <span class="highlight">/docs</span> - Interactive API documentation</p>
+                <p><strong>GET</strong> <span class="highlight">/redoc</span> - Alternative API documentation</p>
+            </div>
+                </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const chatForm = document.getElementById('chatForm');
+                const messageInput = document.getElementById('messageInput');
+                const chatMessages = document.getElementById('chatMessages');
+                const sendButton = document.getElementById('sendButton');
+                const buttonText = document.getElementById('buttonText');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                const typingIndicator = document.getElementById('typingIndicator');
+                
+                // Session ID for maintaining conversation
+                const sessionId = 'test';
+                
+                chatForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const message = messageInput.value.trim();
+                    if (!message) return;
+                    
+                    // Add user message to chat
+                    addMessage(message, 'user');
+                    messageInput.value = '';
+                    
+                    // Show loading state
+                    setLoadingState(true);
+                    
+                    try {
+                        // Call the chat API
+                        const response = await fetch('/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                movie: 'The-Godfather',
+                                character: 'Michael Corleone',
+                                message: message,
+                                session_id: sessionId
+                            })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        // Add character response to chat
+                        addMessage(data.reply, 'character');
+                        
+                    } catch (error) {
+                        console.error('Error:', error);
+                        addMessage('Sorry, I encountered an error. Please try again.', 'character');
+                    } finally {
+                        setLoadingState(false);
+                    }
+                });
+                
+                function addMessage(content, sender) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${sender}`;
+                    
+                    const avatar = document.createElement('div');
+                    avatar.className = 'message-avatar';
+                    avatar.textContent = sender === 'user' ? 'U' : 'MC';
+                    
+                    const messageContent = document.createElement('div');
+                    messageContent.className = 'message-content';
+                    messageContent.textContent = content;
+                    
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(messageContent);
+                    
+                    chatMessages.appendChild(messageDiv);
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+                
+                function setLoadingState(isLoading) {
+                    if (isLoading) {
+                        sendButton.disabled = true;
+                        buttonText.style.display = 'none';
+                        loadingSpinner.style.display = 'inline-block';
+                        typingIndicator.style.display = 'flex';
+                    } else {
+                        sendButton.disabled = false;
+                        buttonText.style.display = 'inline';
+                        loadingSpinner.style.display = 'none';
+                        typingIndicator.style.display = 'none';
+                    }
+                }
+                
+                // Focus on input when page loads
+                messageInput.focus();
+            });
+        </script>
+    </body>
+</html> 
